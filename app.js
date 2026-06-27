@@ -82,8 +82,14 @@ function renderConfidence(match) {
   `;
 }
 
+function isUpcoming(match) {
+  if (match.status === "FINISHED") return false;
+  if (match.status === "IN_PLAY" || match.status === "PAUSED") return true;
+  return new Date(match.kickoff) > new Date();
+}
+
 function renderHeroMatches(matches) {
-  const featured = matches.slice(0, 5);
+  const featured = matches.filter(isUpcoming).slice(0, 5);
   document.querySelector("#heroMatches").innerHTML = featured.map((match) => `
     <article class="score-card">
       <div>
