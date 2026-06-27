@@ -36,8 +36,9 @@ const LiveData = {
   },
 
   transformMatch(apiMatch, staticMatches) {
-    const home = apiMatch.homeTeam.name;
-    const away = apiMatch.awayTeam.name;
+    const home = apiMatch.homeTeam?.name || "TBD";
+    const away = apiMatch.awayTeam?.name || "TBD";
+    if (home === "TBD" && away === "TBD") return null;
     const isLive = apiMatch.status === "IN_PLAY" || apiMatch.status === "PAUSED";
     const isFinished = apiMatch.status === "FINISHED";
     const label = this.liveLabel(apiMatch.status, apiMatch.score);
@@ -107,9 +108,9 @@ const LiveData = {
       if (!res.ok) throw new Error(`Proxy ${res.status}`);
       const data = await res.json();
 
-      const matches = (data.matches || []).map((m) =>
-        this.transformMatch(m, staticData.matches)
-      );
+      const matches = (data.matches || [])
+        .map((m) => this.transformMatch(m, staticData.matches))
+        .filter(Boolean);
 
       const standings = this.transformStandings(data.standings);
       const scorers = this.transformScorers(data.scorers);
