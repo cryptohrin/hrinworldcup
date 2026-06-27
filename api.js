@@ -1,21 +1,11 @@
 const API_CONFIG = {
-  key: "9decb72e3f9f4cad810c8d695fba6fe3",
-  base: "https://api.football-data.org/v4",
-  competition: "WC",
+  proxyUrl: "/api/football",
   refreshInterval: 5 * 60 * 1000,
   timezone: "Asia/Singapore"
 };
 
 const LiveData = {
   cache: { timestamp: 0, result: null },
-
-  async fetchJSON(endpoint) {
-    const res = await fetch(`${API_CONFIG.base}${endpoint}`, {
-      headers: { "X-Auth-Token": API_CONFIG.key }
-    });
-    if (!res.ok) throw new Error(`API ${res.status}`);
-    return res.json();
-  },
 
   isToday(utcDate) {
     const fmt = new Intl.DateTimeFormat("en-CA", { timeZone: API_CONFIG.timezone });
@@ -83,7 +73,7 @@ const LiveData = {
   },
 
   transformStandings(apiStandings) {
-    return apiStandings
+    return (apiStandings || [])
       .filter((s) => s.type === "TOTAL" && s.stage === "GROUP_STAGE")
       .map((s) => ({
         group: s.group ? s.group.replace("GROUP_", "Group ") : "Group",
@@ -100,7 +90,7 @@ const LiveData = {
   },
 
   transformScorers(apiScorers) {
-    return apiScorers.slice(0, 6).map((s) => [
+    return (apiScorers || []).slice(0, 6).map((s) => [
       `${s.player.name} (${s.team.name})`,
       `${s.goals} goal${s.goals !== 1 ? "s" : ""}${s.assists ? `, ${s.assists} assist${s.assists !== 1 ? "s" : ""}` : ""}`
     ]);
@@ -113,24 +103,22 @@ const LiveData = {
     }
 
     try {
-      const [matchData, standingsData, scorerData] = await Promise.all([
-        this.fetchJSON(`/competitions/${API_CONFIG.competition}/matches`),
-        this.fetchJSON(`/competitions/${API_CONFIG.competition}/standings`),
-        this.fetchJSON(`/competitions/${API_CONFIG.competition}/scorers`).catch(() => ({ scorers: [] }))
-      ]);
+      const res = await fetch(API_CONFIG.proxyUrl);
+      if (!res.ok) throw new Error(`Proxy ${res.status}`);
+      const data = await res.json();
 
-      const matches = (matchData.matches || []).map((m) =>
+      const matches = (data.matches || []).map((m) =>
         this.transformMatch(m, staticData.matches)
       );
 
-      const standings = this.transformStandings(standingsData.standings || []);
-      const scorers = this.transformScorers(scorerData.scorers || []);
+      const standings = this.transformStandings(data.standings);
+      const scorers = this.transformScorers(data.scorers);
 
       const result = {
         ...staticData,
         meta: {
           ...staticData.meta,
-          updated: new Date().toISOString(),
+          updated: data.timestamp || new Date().toISOString(),
           source: "football-data.org",
           live: true
         },
