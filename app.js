@@ -293,16 +293,17 @@ function renderLiveBadge(meta) {
 }
 
 function renderAll(cupData) {
-  const matches = [...cupData.matches].sort((a, b) => new Date(a.kickoff) - new Date(b.kickoff));
-  renderHeroMatches(matches);
+  const allMatches = [...cupData.matches].sort((a, b) => new Date(a.kickoff) - new Date(b.kickoff));
+  const upcoming = allMatches.filter(isUpcoming);
+  renderHeroMatches(upcoming);
   renderTicker(cupData.stories);
-  renderMetrics(matches);
-  renderMatches(matches);
+  renderMetrics(upcoming);
+  renderMatches(upcoming);
   renderTables(cupData.standings);
   renderCalendar(cupData.events);
   renderTeams(cupData.teams);
-  renderWatchList(matches);
-  renderOdds(matches);
+  renderWatchList(upcoming);
+  renderOdds(upcoming);
   renderSignals(cupData.trackers);
   renderLiveBadge(cupData.meta);
 }
