@@ -1,0 +1,207 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>World Cup 2026 Match Hub</title>
+    <meta name="theme-color" content="#080441" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <header class="hero">
+      <div class="hero__shade"></div>
+      <nav class="topbar" aria-label="Primary">
+        <a class="brand" href="#top" aria-label="World Cup 2026 dashboard home">
+          <span class="brand__mark">26</span>
+          <span>World Cup Signal</span>
+        </a>
+        <div class="topbar__links">
+          <a href="#matches">Picks</a>
+          <a href="#odds">Odds</a>
+          <a href="#tables">Tables</a>
+          <a href="#calendar">Calendar</a>
+        </div>
+      </nav>
+
+      <section id="top" class="hero__content">
+        <div class="hero__copy">
+          <p class="eyebrow">FIFA World Cup 2026 · Singapore time</p>
+          <h1>Your Matchday Cheat Sheet</h1>
+          <p class="hero__lede">
+            Fixture predictions, safer plays, value angles, goals picks, and risk notes
+            for the matches worth your attention.
+          </p>
+          <div class="hero__actions">
+            <a class="button button--primary" href="#matches">View Best Bets</a>
+            <a class="button button--ghost" href="#odds">Compare Odds</a>
+          </div>
+        </div>
+        <aside class="scoreboard" aria-label="Featured upcoming matches">
+          <div class="section-head section-head--compact">
+            <p>Next up</p>
+            <h2>Best Picks First</h2>
+          </div>
+          <div id="heroMatches" class="scoreboard__list"></div>
+        </aside>
+      </section>
+    </header>
+
+    <main>
+      <section class="ticker band" aria-label="Betting ticker">
+        <div class="ticker__label">Betting ticker</div>
+        <div id="storyTicker" class="ticker__track"></div>
+      </section>
+
+      <section class="section section--summary" aria-labelledby="summaryTitle">
+        <div class="section-head">
+          <p>Betting dashboard</p>
+          <h2 id="summaryTitle">Where To Look First</h2>
+        </div>
+        <div class="summary-grid">
+          <article class="metric">
+            <span id="bestChancePick">--</span>
+            <p>best chance pick</p>
+          </article>
+          <article class="metric">
+            <span id="saferPickCount">--</span>
+            <p>safer plays today</p>
+          </article>
+          <article class="metric">
+            <span id="valueWatchCount">--</span>
+            <p>value picks today</p>
+          </article>
+          <article class="metric">
+            <span id="spicyPickCount">--</span>
+            <p>spicy angles</p>
+          </article>
+        </div>
+      </section>
+
+      <section id="matches" class="section" aria-labelledby="matchesTitle">
+        <div class="section-head section-head--row">
+          <div>
+            <p>Fixture predictions</p>
+            <h2 id="matchesTitle">Best Bets By Fixture</h2>
+          </div>
+          <div class="filter-bar" aria-label="Match filters">
+            <button class="filter is-active" type="button" data-filter="all">All</button>
+            <button class="filter" type="button" data-filter="today">Today</button>
+            <button class="filter" type="button" data-filter="safer">Safer</button>
+            <button class="filter" type="button" data-filter="value">Value</button>
+            <button class="filter" type="button" data-filter="goals">Goals</button>
+            <button class="filter" type="button" data-filter="spicy">Spicy</button>
+          </div>
+        </div>
+        <div class="bet-cheatsheet" aria-label="Betting pick guide">
+          <div>
+            <strong>Safer</strong>
+            <span>More likely to land, usually lower payout.</span>
+          </div>
+          <div>
+            <strong>Value</strong>
+            <span>Better price for the risk, but less certain.</span>
+          </div>
+          <div>
+            <strong>Goals</strong>
+            <span>Over/under or both-teams-to-score angles.</span>
+          </div>
+          <div>
+            <strong>Spicy</strong>
+            <span>Higher payout ideas. Smaller stakes only.</span>
+          </div>
+        </div>
+        <div id="matchesGrid" class="matches-grid"></div>
+      </section>
+
+      <section id="odds" class="section band odds-section" aria-labelledby="oddsTitle">
+        <div class="section-head section-head--row">
+          <div>
+            <p>Singapore market lens</p>
+            <h2 id="oddsTitle">Odds, Value Flags, And Risk Notes</h2>
+          </div>
+          <span class="source-pill">Decimal odds · manual snapshot</span>
+        </div>
+        <div class="notice">
+          Analysis picks, not guarantees. Odds move fast. Stake small, bet legally,
+          and skip anything you do not understand.
+        </div>
+        <div id="oddsGrid" class="odds-grid"></div>
+      </section>
+
+      <section id="tables" class="section" aria-labelledby="tablesTitle">
+        <div class="section-head section-head--row">
+          <div>
+            <p>Standings context</p>
+            <h2 id="tablesTitle">Current Group Tables</h2>
+          </div>
+          <span class="source-pill">Fallback snapshot · 27 Jun 2026</span>
+        </div>
+        <div id="tablesGrid" class="tables-grid"></div>
+      </section>
+
+      <section class="section band" aria-labelledby="intelTitle">
+        <div class="section-head section-head--row">
+          <div>
+            <p>Scouting</p>
+            <h2 id="intelTitle">Team Intelligence</h2>
+          </div>
+          <span class="source-pill">Confirmed notes + media narratives</span>
+        </div>
+        <div id="teamIntel" class="team-grid"></div>
+      </section>
+
+      <section class="section" aria-labelledby="watchTitle">
+        <div class="section-head">
+          <p>Watchlist</p>
+          <h2 id="watchTitle">Matches With Betting Heat</h2>
+        </div>
+        <div id="watchList" class="watch-grid"></div>
+      </section>
+
+      <section id="calendar" class="section band" aria-labelledby="calendarTitle">
+        <div class="section-head">
+          <p>Calendar</p>
+          <h2 id="calendarTitle">Events To Track</h2>
+        </div>
+        <div id="calendarGrid" class="calendar-grid"></div>
+      </section>
+
+      <section class="section section--extras" aria-labelledby="extrasTitle">
+        <div class="section-head">
+          <p>Signals</p>
+          <h2 id="extrasTitle">Extra Trackers</h2>
+        </div>
+        <div class="extras-grid">
+          <article>
+            <h3>Dark Horse Tracker</h3>
+            <div id="darkHorseList" class="signal-list"></div>
+          </article>
+          <article>
+            <h3>Upset Alert Meter</h3>
+            <div id="upsetList" class="signal-list"></div>
+          </article>
+          <article>
+            <h3>Golden Boot Watch</h3>
+            <div id="goldenBootList" class="signal-list"></div>
+          </article>
+        </div>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <p>Data adapter ready · fallback content dated 27 June 2026 · Singapore time display</p>
+      <p>
+        Fixtures should be reconciled with the official
+        <a href="https://www.fifa.com/en/tournaments/mens/worldcup/canadamexicousa2026" target="_blank" rel="noreferrer">FIFA World Cup 2026 hub</a>
+        before publishing live.
+      </p>
+      <p><a href="STYLE_GUIDE.md">Purple football style guide</a></p>
+    </footer>
+
+    <script src="data.js"></script>
+    <script src="app.js"></script>
+  </body>
+</html>
