@@ -1,13 +1,8 @@
 const dataAdapter = {
   async load() {
-    try {
-      const response = await fetch("worldcup-feed.json", { cache: "no-store" });
-      if (response.ok) {
-        return await response.json();
-      }
-    } catch (error) {
-    }
-    return window.WORLD_CUP_DATA;
+    const staticData = window.WORLD_CUP_DATA;
+    const liveData = await LiveData.load(staticData);
+    return liveData || staticData;
   }
 };
 
@@ -274,8 +269,24 @@ function renderSignals(trackers) {
   document.querySelector("#goldenBootList").innerHTML = renderList(trackers.goldenBoot);
 }
 
-async function init() {
-  const cupData = await dataAdapter.load();
+function renderLiveBadge(meta) {
+  const el = document.querySelector("#liveBadge");
+  if (!el) return;
+  if (meta.live) {
+    const time = new Date(meta.updated).toLocaleTimeString("en-SG", {
+      timeZone: "Asia/Singapore",
+      hour: "2-digit",
+      minute: "2-digit"
+    });
+    el.innerHTML = `<span class="live-dot"></span> Live · updated ${time}`;
+    el.hidden = false;
+  } else {
+    el.innerHTML = "Static snapshot";
+    el.hidden = false;
+  }
+}
+
+function renderAll(cupData) {
   const matches = [...cupData.matches].sort((a, b) => new Date(a.kickoff) - new Date(b.kickoff));
   renderHeroMatches(matches);
   renderTicker(cupData.stories);
@@ -287,6 +298,17 @@ async function init() {
   renderWatchList(matches);
   renderOdds(matches);
   renderSignals(cupData.trackers);
+  renderLiveBadge(cupData.meta);
+}
+
+async function init() {
+  const cupData = await dataAdapter.load();
+  renderAll(cupData);
+
+  setInterval(async () => {
+    const fresh = await dataAdapter.load();
+    renderAll(fresh);
+  }, API_CONFIG.refreshInterval);
 }
 
 init();
