@@ -6,7 +6,6 @@ const dataAdapter = {
         return await response.json();
       }
     } catch (error) {
-      // Static file use falls back here, which keeps the page usable offline.
     }
     return window.WORLD_CUP_DATA;
   }
